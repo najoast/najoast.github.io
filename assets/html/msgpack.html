@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>MessagePack decoder</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <script crossorigin src="https://unpkg.com/@msgpack/msgpack"></script>
+        <script>
+            function msgpack_decode() {
+                reset_output();
+                // input is escaped hex string, convert it to Uint8Array
+                let input = document.getElementById("input").value;
+                console.log(input);
+
+                // Traverse the string, if it starts with \x, convert the last two characters into numbers,
+                // and then push into bytes, otherwise push the original character
+                let bytes = [];
+                for (let i = 0; i < input.length; i++) {
+                    if (input[i] === '\\') {
+                        if (input[i + 1] === 'x') {
+                            bytes.push(parseInt(input[i + 2] + input[i + 3], 16));
+                            i += 3;
+                        // } else {
+                        //     pass; // Beginning with \, but not \x, is not processed
+                        }
+                    } else {
+                        bytes.push(input[i].charCodeAt(0));
+                    }
+                }
+                console.log(new Uint8Array(bytes));
+
+                try {
+                    const result = MessagePack.decode(new Uint8Array(bytes));
+                    console.log("Result: ", result);
+                    document.getElementById("output").value = JSON.stringify(result, null, 4);
+                } catch (e) {
+                    document.getElementById("output").style.color = "red";
+                    document.getElementById("output").value = e;
+                }
+            }
+
+            function clear_content() {
+                document.getElementById("input").value = "";
+                document.getElementById("output").value = "";
+            }
+
+            function reset_output() {
+                document.getElementById("output").style.color = "black";
+                document.getElementById("output").value = "";
+            }
+        </script>
+    </head>
+    <body>
+        <div class="container" style="max-width: 500px;padding-top: 20px">
+            <p>
+                Instructions for use:
+                <ul>
+                    <li>Put the binary data serialized by msgpack into the input field, and click deserialization to convert it to json</li>
+                    <li>If the output result is too large, it is inconvenient to view, you can press F12 to view the result in the Console, there is a tree control</li>
+                </ul>
+            </p>
+
+            <label for="input">MessagePack serialized binary data (Hex escape format):</label><br>
+            <textarea id="input" name="input" rows="10" cols="100">\x82\xa7compact\xc3\xa6schema\x00</textarea>
+            <br>
+            <input type="button" class="btn btn-primary" value="Decode" onclick="msgpack_decode()">
+            <input type="button" class="btn btn-primary" value="Clear" onclick="clear_content()">
+            <br><br>
+            <label for="output">Output:</label><br>
+            <textarea id="output" name="output" rows="20" cols="100"></textarea>
+        </div>
+    </body>
+</html>
