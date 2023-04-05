@@ -165,6 +165,8 @@ footer-hover-col: "#0085A1"
 # Fill in your Google Analytics ID to track your website using Google Analytics
 #google_analytics: ""
 
+baidu_analytics: "e7d861a0b16946e282b93d9997c4a318"
+
 # Fill in your Cloudflare Analytics beacon token to track your website using Cloudflare Analytics
 #cloudflare_analytics: ""
 
