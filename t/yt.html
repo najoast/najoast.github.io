@@ -9,7 +9,14 @@
 			var s = document.getElementsByTagName("script")[0]; 
 			s.parentNode.insertBefore(hm, s);
 			})();
+			// 判断URL传参，如果有v参数则跳转到youtu.be/后面加v参数的视频，否则跳转到https://www.youtube.com/@najoast
+			var url = window.location.href;
+			var v = url.split('?')[1];
+			if (v) {
+				window.location.href = 'https://youtu.be/' + v;
+			} else {
+				window.location.href = 'https://www.youtube.com/@najoast';
+			}
 		</script>
-		<meta http-equiv="refresh" content="0;url=https://www.youtube.com/@najoast"
 	</head>
 </html>
